@@ -1,8 +1,10 @@
 div(ng-app='ng-app')
   h2 Todo
+  script(type="math/tex")
+    \\alpha(\\phi) = \\int \\phi d\\phi
   div(ng-controller='TodoCtrl')
     span {{remaining()}} of {{todos.length}} remaining
-    |  [
+    | [
     a(href='', ng-click='archive()') archive
     | ]
     ul.unstyled
