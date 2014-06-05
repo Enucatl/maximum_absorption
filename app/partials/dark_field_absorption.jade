@@ -1,18 +1,20 @@
 div(ng-app='ng-app')
-  h2 Todo
-  script(type="math/tex")
-    \\alpha(\\phi) = \\int \\phi d\\phi
-  div(ng-controller='TodoCtrl')
-    span {{remaining()}} of {{todos.length}} remaining
-    | [
-    a(href='', ng-click='archive()') archive
-    | ]
-    ul.unstyled
-      li(ng-repeat='todo in todos')
-        label(class='checkbox inline')
-          input(type='checkbox', ng-model='todo.done')
-          span(class='done{{todo.done}}') {{todo.text}}
-    form(class='form-inline', ng-submit='addTodo()')
-      p
-        input(type='text', ng-model='todoText', size='30', placeholder='add new todo here')
-        input.btn.btn-primary(type='submit', value='add')
+  h2 Dark field and absorption
+  p.
+    In the energy range dominated by Compton scattering, above 80 keV, we
+    have a relationship between the dark field \\(B\\) and the transmission
+    \\(A\\) with a free parameter \\(\\beta\\):
+  script(type="math/tex").
+    \\begin{align*}
+    \\gamma(\\beta) &= \\dfrac{\\pi^3}{3}\\dfrac{\\beta}{1 - 2 \\pi \\beta}\\\\
+    B\(A\) &= \\exp \\left\\{ \\gamma(\\beta) \\Big(1 - \\dfrac 1 A \\Big) \\right\\}
+    \\end{align*}
+  p.
+    Experiments on an interferometer with a design energy of 120 keV show a
+    typical value for \\(\\beta \\sim 0.08\\). Therefore the dark field
+    signal depends on the transmission according to the function plotted
+    below.
+
+  theoretical-plot.span12
+
+  a.btn.btn-primary(ng-href="#/noise_absorption") Next

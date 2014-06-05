@@ -82,4 +82,3 @@ angular.module('app.controllers', [])
       $scope.todos.push todo  unless todo.done
 
 ])
-

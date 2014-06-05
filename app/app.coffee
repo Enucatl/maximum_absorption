@@ -20,13 +20,13 @@ App.config([
 
   $routeProvider
 
-    .when('/', {templateUrl: '/partials/home.html'})
+    .when('/home', {templateUrl: '/partials/home.html'})
     .when('/dark_field_absorption', {templateUrl: '/partials/dark_field_absorption.html'})
     .when('/noise_absorption', {templateUrl: '/partials/noise_absorption.html'})
     .when('/maximum_thickness', {templateUrl: '/partials/maximum_thickness.html'})
 
     # Catch all
-    .otherwise({redirectTo: '/'})
+    .otherwise({redirectTo: '/home'})
 
   # Without server side support html5 must be disabled.
   $locationProvider.html5Mode(false)

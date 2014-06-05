@@ -1,1 +1,27 @@
-p This is the partial for view 1.
+div(ng-app='ng-app')
+  h2 Differential phase and noise
+  p.
+    This strong reduction of visibility with absorption has an important
+    effect on the ability to detect differential phase signals.
+  p.
+    In general, the noise of the differential phase \\(\\phi\\) is
+  script(type="math/tex").
+    \\sigma_\\phi = \\dfrac{\\sqrt{2 \\chi}}{v \\sqrt{N}}
+  p.
+    Where \\(\\chi\\) is a constant given by the detector, here we use the
+    value for our camera \\(\\chi = 1/2\\).
+  p.
+    Moreover, in this formula, the error depends weakly on the number of
+    counts and to the transmission \\(A\\) defined by \\(N = A N_0 \\).
+  p.
+    In this model, the effect of the reduction of visibility is much
+    stronger and leads to a big increase in noise levels. Indeed, if
+    \\(v_0\\) and \\(N_0\\) are the visibility and counts without the
+    sample, the differential phase image of the sample will have a noise
+    level given by
+
+  script(type="math/tex").
+    \\sigma_\\phi = \\dfrac{1}{v_0 \\sqrt{N_0}}\\dfrac{1}{\\sqrt{A}\\,B(A)}
+
+  p
+    a.btn.btn-primary(ng-href="#/maximum_thickness") Next

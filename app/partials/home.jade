@@ -1,18 +1,13 @@
 div(ng-app='ng-app')
-  h2 Todo
-  script(type="math/tex")
-    \\alpha(\\phi) = \\int \\phi d\\phi
-  div(ng-controller='TodoCtrl')
-    span {{remaining()}} of {{todos.length}} remaining
-    | [
-    a(href='', ng-click='archive()') archive
-    | ]
-    ul.unstyled
-      li(ng-repeat='todo in todos')
-        label(class='checkbox inline')
-          input(type='checkbox', ng-model='todo.done')
-          span(class='done{{todo.done}}') {{todo.text}}
-    form(class='form-inline', ng-submit='addTodo()')
-      p
-        input(type='text', ng-model='todoText', size='30', placeholder='add new todo here')
-        input.btn.btn-primary(type='submit', value='add')
+  h2 Compton scattering and grating interferometry
+
+  p
+    | Experiments 
+    a(href='https://intranet.psi.ch/pub/Tomcat/Schedule2014/2014.06.03.matteo.progress.report.pdf')
+      \(progress report 05/06/2014 pdf\) 
+    | show that Compton scattering has a deep influence on the structure of
+    | the three signals of grating interferometry.
+
+  p The visibility is indeed very strongly affected by the scattering so that the noise properties above the threshold where Compton scattering becomes dominant can be very unfavourable.
+
+  a.btn.btn-primary(ng-href="#/dark_field_absorption") Read more

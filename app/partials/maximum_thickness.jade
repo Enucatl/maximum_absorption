@@ -1,4 +1,26 @@
-p This is the partial for view 2.
-p
-  | Showing of 'interpolate' filter:
-  | {{ 'Current version is v%VERSION%.' | interpolate }}
+div(ng-app='ng-app')
+  h2 Maximum absorption
+  p.
+    The signal-to-noise ratio depends on the differential phase signal
+    \\(\\phi\\) which is in principle not easy to estimate. In any case,
+    though, the domain of \\(\\phi\\) will be limited to \\([-\\pi, \\pi]\\)
+    so that a standard deviation above \\(\\sigma_\\phi \\gtrsim 2\\pi/5 = 1.25\\)
+    (Rose criterion) should lead to technically undetectable contrasts even
+    in the most favourable scenario.
+  p.
+    \\(\\sigma_\\phi(A)\\) is strictly decreasing with \\(A\\). Therefore,
+    there is a minimum transmission \\(A\\) needed for the noise to be under
+    a given threshold \\(\\sigma_\\text{max}\\).
+  p.
+    Given an energy and a material, we show in the interactive table on the
+    right the maximum thickness allowed at the noise level shown on the plot
+    on the left.
+
+  .span6
+    #slider-visibility.span6
+    #slider-exposure.span6
+    #noise-plot.span12
+  .span6
+    #slider-energy.span6
+    #slider-sigma-max.span6
+    #maximum-thickness-table.span12
