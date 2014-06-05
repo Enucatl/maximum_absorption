@@ -37,6 +37,9 @@ angular.module('app.directives', [
         ]
         width = element[0].offsetWidth
         console.log width
+        console.log d3
+        console.log d3.chart
+        console.log d3.chart.slider
         graph = d3.chart.line()
             .width width
             .height 0.618 * width
