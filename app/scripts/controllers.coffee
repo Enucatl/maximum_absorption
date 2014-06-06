@@ -33,10 +33,6 @@ angular.module('app.controllers', [])
     else
       return ''
 
-  "bisect"
-
-  ($scope, bisect) -> $scope.bisect = bisect
-
 ])
 
 .controller('MyCtrl1', [

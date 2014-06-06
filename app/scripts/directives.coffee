@@ -91,6 +91,10 @@ angular.module('app.directives', [
         d3.select element[0]
             .data [data]
             .call graph
+        scope.break_even = bisect(
+            (a) -> sigma_phi(a) < sigma_max,
+            0.01,
+            0.99)
     }
 .directive "maximumThicknessTable", ($parse) ->
     {
@@ -98,4 +102,5 @@ angular.module('app.directives', [
     restrict: "E"
     replace: false
     link: (scope, element, attrs) ->
+        console.log scope.break_even
     }
