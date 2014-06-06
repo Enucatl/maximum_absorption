@@ -62,16 +62,21 @@ angular.module('app.directives', [
         sigma_phi = (a) ->
             (1 / (v0 * Math.sqrt(n0 * a) * df(a)))
         xs = d3.range(0.30, 0.99, 0.01)
+        full_range = d3.range(0.01, 0.99, 0.01)
         data = xs.map (x) -> [x, sigma_phi(x)]
         sigma_max = 2 * Math.PI / 5
         data = [
             {
-                name: "noise"
+                name: "noise with Compton"
                 values: data
             },
             {
+                name: "noise without Compton"
+                values: full_range.map (d) -> [d, 1 / (v0 * d * Math.sqrt(n0 * d))]
+            },
+            {
                 name: "Rose threshold"
-                values: xs.map (x) -> [x, sigma_max]
+                values: full_range.map (x) -> [x, sigma_max]
             }
         ]
         width = element[0].clientWidth
@@ -93,5 +98,4 @@ angular.module('app.directives', [
     restrict: "E"
     replace: false
     link: (scope, element, attrs) ->
-        console.log bisect
     }

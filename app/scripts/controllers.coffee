@@ -32,6 +32,11 @@ angular.module('app.controllers', [])
       return 'active'
     else
       return ''
+
+  "bisect"
+
+  ($scope, bisect) -> $scope.bisect = bisect
+
 ])
 
 .controller('MyCtrl1', [
