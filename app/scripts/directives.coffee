@@ -67,11 +67,11 @@ angular.module('app.directives', [
         sigma_max = 2 * Math.PI / 5
         data = [
             {
-                name: "noise with Compton"
+                name: "with Compton"
                 values: data
             },
             {
-                name: "noise without Compton"
+                name: "without Compton"
                 values: full_range.map (d) -> [d, 1 / (v0 * d * Math.sqrt(n0 * d))]
             },
             {
@@ -91,7 +91,7 @@ angular.module('app.directives', [
         d3.select element[0]
             .data [data]
             .call graph
-        scope.break_even = bisect(
+        scope.minimum_transmission = bisect(
             (a) -> sigma_phi(a) < sigma_max,
             0.01,
             0.99)
@@ -102,5 +102,5 @@ angular.module('app.directives', [
     restrict: "E"
     replace: false
     link: (scope, element, attrs) ->
-        console.log scope.break_even
+        console.log scope.minimum_transmission
     }

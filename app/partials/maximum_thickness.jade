@@ -16,7 +16,9 @@ div(ng-app='ng-app')
     right the maximum thickness allowed at the noise level shown on the plot
     on the left.
 
-  p {{break_even}}
+  p.
+    With the current parameters, the minimum transmission required to stay
+    under the maximum noise level is {{minimum_transmission | number:2}}.
   .span6
     #slider-visibility.span6
     #slider-exposure.span6
