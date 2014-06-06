@@ -35,7 +35,7 @@ angular.module('app.directives', [
                 values: data
             }
         ]
-        width = element[0].offsetWidth
+        width = element[0].clientWidth
         console.log width
         console.log d3
         console.log d3.chart
@@ -43,7 +43,7 @@ angular.module('app.directives', [
         graph = d3.chart.line()
             .width width
             .height 0.618 * width
-        element
+        d3.select element[0]
             .data [data]
             .call graph
     }
