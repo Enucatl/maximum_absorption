@@ -23,6 +23,7 @@ App = angular.module('app', [
   'app.filters'
   'app.services'
   'partials'
+  'glider'
 ])
 
 App.config([
