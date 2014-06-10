@@ -65,6 +65,7 @@ angular.module('app.directives', [
         full_range = d3.range(0.01, 0.99, 0.01)
         data = xs.map (x) -> [x, sigma_phi(x)]
         sigma_max = 2 * Math.PI / 5
+        r = 0.5 # measured by Zhentian at low energies
         data = [
             {
                 name: "with Compton"
@@ -72,7 +73,7 @@ angular.module('app.directives', [
             },
             {
                 name: "without Compton"
-                values: full_range.map (d) -> [d, 1 / (v0 * d * Math.sqrt(n0 * d))]
+                values: full_range.map (d) -> [d, 1 / (v0 * Math.pow(d, r) * Math.sqrt(n0 * d))]
             },
             {
                 name: "Rose threshold"
