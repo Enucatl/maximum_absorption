@@ -26,4 +26,12 @@ div(ng-app='ng-app')
   .span6
     #slider-energy.span6
     #slider-sigma-max.span6
-    maximum-thickness-table.span6(data-ng-controller="MaximumThicknessCtrl")
+    table#hor-minimalist-a.span6(data-ng-controller="MaximumThicknessCtrl")
+      tr
+        th Material
+        th Max thickness (cm)
+        th Max thickness (cm) <br> without Compton
+      tr(ng-repeat="row in table")
+        td(align="center") {{ row.name }}
+        td(align="center") {{ row.t | number:2 }}
+        td(align="center") {{ row.t_no_compton | number:2 }}

@@ -60,7 +60,9 @@ angular.module('app.directives', [
         df = (a) ->
             Math.exp(gamma(beta) * (1 - 1 / a))
         sigma_phi = (a) ->
-            (1 / (v0 * Math.sqrt(n0 * a) * df(a)))
+            1 / (v0 * Math.sqrt(n0 * a) * df(a))
+        sigma_phi_no_compton = (a) ->
+            1 / (v0 * Math.pow(a, r) * Math.sqrt(n0 * a))
         xs = d3.range(0.30, 0.99, 0.01)
         full_range = d3.range(0.01, 0.99, 0.01)
         data = xs.map (x) -> [x, sigma_phi(x)]
@@ -73,7 +75,7 @@ angular.module('app.directives', [
             },
             {
                 name: "without Compton"
-                values: full_range.map (d) -> [d, 1 / (v0 * Math.pow(d, r) * Math.sqrt(n0 * d))]
+                values: full_range.map (x) -> [x, sigma_phi_no_compton(x)]
             },
             {
                 name: "Rose threshold"
@@ -96,11 +98,9 @@ angular.module('app.directives', [
             (a) -> sigma_phi(a) < sigma_max,
             0.01,
             0.99)
-    }
-.directive "maximumThicknessTable", ($parse) ->
-    {
-    # restricting to an element
-    restrict: "E"
-    replace: false
-    link: (scope, element, attrs) ->
+        scope.minimum_transmission_no_compton = bisect(
+            (a) -> sigma_phi_no_compton(a) < sigma_max,
+            0.01,
+            0.99)
+        scope.energy = 100
     }

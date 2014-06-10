@@ -40,9 +40,20 @@ angular.module('app.controllers', [])
     '$http'
 
     ($scope, $http) ->
-        console.log "getting json"
+        energy = $scope.energy
         $http.get "nist.data.json"
             .success (data) ->
-                console.log "got json"
-                console.log data
+                $scope.table = data.map (element) ->
+                    array = element.table.split(/\s+/).map(parseFloat)
+                    rows = []
+                    while array.length > 0
+                        rows.push array.splice 0, 3
+                    chosen_row = rows.filter (d) -> d[0] == energy * 1e-3
+                    chosen_row = chosen_row[0]
+                    mu = chosen_row[1] * element.density
+                    {
+                        name: element.name
+                        t: -Math.log($scope.minimum_transmission) / mu
+                        t_no_compton: -Math.log($scope.minimum_transmission_no_compton) / mu
+                    }
 ])
