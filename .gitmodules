@@ -1,6 +1,3 @@
 [submodule "vendor/d3.line"]
 	path = vendor/d3.line
 	url = https://github.com/Enucatl/d3.line.git
-[submodule "vendor/angular-slider"]
-	path = vendor/angular-slider
-	url = https://github.com/Venturocket/angular-slider.git
