@@ -19,19 +19,21 @@ div(ng-app='ng-app')
   p.
     With the current parameters, the minimum transmission required to stay
     under the maximum noise level is {{minimum_transmission | number:2}}.
-  .span6
-    #slider-visibility.span6
-    #slider-exposure.span6
-    noise-plot.span6
-  .span6
-    #slider-energy.span6
-    #slider-sigma-max.span6
-    table#hor-minimalist-a.span6(data-ng-controller="MaximumThicknessCtrl")
-      tr
-        th Material
-        th Max thickness (cm)
-        th Max thickness (cm) <br> without Compton
-      tr(ng-repeat="row in table")
-        td(align="center") {{ row.name }}
-        td(align="center") {{ row.t | number:2 }}
-        td(align="center") {{ row.t_no_compton | number:2 }}
+  div(data-ng-controller="MaximumThicknessCtrl")
+    .span6
+      p
+        {{energy}}
+      #slider-exposure.span6
+      noise-plot.span6
+    .span6
+      #slider-energy.span6
+      #slider-sigma-max.span6
+      table#hor-minimalist-a.span6
+        tr
+          th Material
+          th Max thickness (cm)
+          th Max thickness (cm) <br> without Compton
+        tr(ng-repeat="row in table")
+          td(align="center") {{ row.name }}
+          td(align="center") {{ row.t | number:2 }}
+          td(align="center") {{ row.t_no_compton | number:2 }}

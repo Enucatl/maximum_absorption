@@ -40,7 +40,12 @@ angular.module('app.controllers', [])
     '$http'
 
     ($scope, $http) ->
-        energy = $scope.energy
+        $scope.energy = 100
+        $scope.visibility = 0.1
+        $scope.counts = 10000
+        $scope.beta = 0.08
+        $scope.low_energy_r = 0.5
+
         $http.get "nist.data.json"
             .success (data) ->
                 $scope.table = data.map (element) ->
@@ -48,7 +53,7 @@ angular.module('app.controllers', [])
                     rows = []
                     while array.length > 0
                         rows.push array.splice 0, 3
-                    chosen_row = rows.filter (d) -> d[0] == energy * 1e-3
+                    chosen_row = rows.filter (d) -> d[0] == $scope.energy * 1e-3
                     chosen_row = chosen_row[0]
                     mu = chosen_row[1] * element.density
                     {
