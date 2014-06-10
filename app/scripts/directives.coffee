@@ -103,5 +103,4 @@ angular.module('app.directives', [
     restrict: "E"
     replace: false
     link: (scope, element, attrs) ->
-        console.log scope.minimum_transmission
     }
