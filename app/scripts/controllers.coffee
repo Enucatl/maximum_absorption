@@ -41,7 +41,7 @@ angular.module('app.controllers', [])
 
     ($scope, $http) ->
         console.log "getting json"
-        $http.get "app/data/nist.data.json"
+        $http.get "nist.data.json"
             .success (data) ->
                 console.log "got json"
                 console.log data
