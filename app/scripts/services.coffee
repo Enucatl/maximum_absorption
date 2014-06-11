@@ -3,7 +3,7 @@
 ### Services ###
 
 angular
-    .module('app.services', [])
+    .module('app.services', ["ngResource"])
 
     .factory 'version', -> "0.1"
 
@@ -14,8 +14,8 @@ angular
         this.df = (a, beta) ->
             Math.exp(this.gamma(beta) * (1 - 1 / a))
 
-        this.sigma_phi = (a, v, n) ->
-            1 / (v * Math.sqrt(n * a) * df(a))
+        this.sigma_phi = (a, beta, v, n) ->
+            1 / (v * Math.sqrt(n * a) * this.df(a, beta))
 
         this.sigma_phi_no_compton = (a, v, n, r=0.5) ->
             #assumes a fixed log ratio of the dark field and absorption. The
@@ -23,13 +23,32 @@ angular
             1 / (v * Math.pow(a, r) * Math.sqrt(n * a))
         return this
 
-    .service 'nistTableService', ->
-        this.raw_table = $http.get "nist.data.json"
-            .success (data) ->
-                table = data.map (element) ->
-                    array = element.table.split(/\s+/).map(parseFloat)
-                    rows = []
-                    while array.length > 0
-                        rows.push array.splice 0, 3
-                    return rows
+    .factory 'Table', [
+        "$http"
+        
+        ($http) ->
+            $http.get "nist.data.json"
+    ]
+
+    .service 'thicknessCalculatorService', ->
+        this.thickness_table = (raw_table, energy, min_tr, min_tr_no_compton) ->
+            table = raw_table.map (element) ->
+                array = element.table.split(/\s+/).map(parseFloat)
+                rows = []
+                while array.length > 0
+                    rows.push array.splice 0, 3
+                rows.map (d) ->
+                    {
+                        name: element.name
+                        energy: d[0] * 1e3
+                        mu: d[1] * element.density
+                    }
+            rows_with_energy = table.map (element) ->
+                (element.filter (d) -> d.energy == energy)[0]
+            rows_with_energy.map (d) ->
+                {
+                    name: d.name
+                    t: -Math.log(min_tr) / d.mu
+                    t_no_compton: -Math.log(min_tr_no_compton) / d.mu
+                }
         return this

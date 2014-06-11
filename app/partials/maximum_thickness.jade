@@ -1,29 +1,29 @@
 div(ng-app='ng-app')
-  h2 Maximum absorption
-  p.
-    The signal-to-noise ratio depends on the differential phase signal
-    \\(\\phi\\) which is in principle not easy to estimate. In any case,
-    though, the domain of \\(\\phi\\) will be limited to \\([-\\pi, \\pi]\\)
-    so that a standard deviation above \\(\\sigma_\\phi \\gtrsim 2\\pi/5 = 1.25\\)
-    (Rose criterion) should lead to technically undetectable contrasts even
-    in the most favourable scenario.
-  p.
-    \\(\\sigma_\\phi(A)\\) is strictly decreasing with \\(A\\). Therefore,
-    there is a minimum transmission \\(A\\) needed for the noise to be under
-    a given threshold \\(\\sigma_\\text{max}\\).
-  p.
-    Given an energy and a material, we show in the interactive table on the
-    right the maximum thickness allowed at the noise level shown on the plot
-    on the left.
-
-  p.
-    With the current parameters, the minimum transmission required to stay
-    under the maximum noise level is {{minimum_transmission | number:2}}.
   div(data-ng-controller="MaximumThicknessCtrl")
+    h2 Maximum absorption
+    p.
+      The signal-to-noise ratio depends on the differential phase signal
+      \\(\\phi\\) which is in principle not easy to estimate. In any case,
+      though, the domain of \\(\\phi\\) will be limited to \\([-\\pi, \\pi]\\)
+      so that a standard deviation above \\(\\sigma_\\phi \\gtrsim 2\\pi/5 = 1.25\\)
+      (Rose criterion) should lead to technically undetectable contrasts even
+      in the most favourable scenario.
+    p.
+      \\(\\sigma_\\phi(A)\\) is strictly decreasing with \\(A\\). Therefore,
+      there is a minimum transmission \\(A\\) needed for the noise to be under
+      a given threshold \\(\\sigma_\\text{max}\\).
+    p.
+      Given an energy and a material, we show in the interactive table on the
+      right the maximum thickness allowed at the noise level shown on the plot
+      on the left.
+
+    p.
+      With the current parameters, the minimum transmission required to stay
+      under the maximum noise level is {{minimum_transmission | number:2}}.
     .span6
       p Energy (keV):
       p.bottom-padded
-        slider(show_value_in_handle, value="energy", min="10", max="300",
+        slider(show_value_in_handle, defer_update, value="energy", min="10", max="300",
         increments="20,30,40,50,60,80,100,150,200,300")
       p Visibility (%):
       p.bottom-padded

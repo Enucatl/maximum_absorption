@@ -55,30 +55,87 @@ angular.module('app.controllers',
                 .x_title "transmission"
                 .y_title "dark field"
 
-        $scope.update_table = (min_tr, min_tr_no_compton) ->
-            $http.get "nist.data.json"
-                .success (data) ->
-                    $scope.table = data.map (element) ->
-                        array = element.table.split(/\s+/).map(parseFloat)
-                        rows = []
-                        while array.length > 0
-                            rows.push array.splice 0, 3
-                        chosen_row = rows.filter (d) -> d[0] == $scope.energy * 1e-3
-                        chosen_row = chosen_row[0]
-                        mu = chosen_row[1] * element.density
-                        {
-                            name: element.name
-                            t: -Math.log(min_tr) / mu
-                            t_no_compton: -Math.log(min_tr_no_compton) / mu
-                        }
-        $scope.update_table()
+        ])
 
-        $scope.watch "minimum_transmission", (minimum_transmission, old_value) ->
-            $scope.minimum_transmission = minimum_transmission
-            $scope.$apply ->
-                $scope.table = $scope.update_table($scope.minimum_transmission, $scope.minimum_transmission_no_compton)
-        $scope.watch "minimum_transmission_no_compton", (minimum_transmission_no_compton, old_value) ->
-            $scope.minimum_transmission_no_compton = minimum_transmission_no_compton
-            $scope.$apply ->
-                $scope.table = $scope.update_table($scope.minimum_transmission, $scope.minimum_transmission_no_compton)
-])
+    .controller 'MaximumThicknessCtrl', [
+        '$scope'
+        '$timeout'
+        'Table'
+        'comptonService'
+        'thicknessCalculatorService'
+
+        ($scope, $timeout, Table, comptonService, thicknessCalculatorService) ->
+            $scope.energy = 100
+            $scope.beta = 0.08
+            $scope.visibility = 10
+            $scope.counts = 10000
+            $scope.low_energy_r = 0.5
+            max_y = 3
+
+            draw_graph = (v, n, r, beta, energy) ->
+                min_x = bisect(
+                    (a) -> comptonService.sigma_phi(a, beta, v, n) < max_y,
+                    0.01,
+                    0.99)
+                min_x_no_compton = bisect(
+                    (a) -> comptonService.sigma_phi_no_compton(a, v, n, r) < max_y,
+                    0.01,
+                    0.99)
+                xs = d3.range(d3.round(min_x, 2), 0.99, 0.01)
+                full_range = d3.range(d3.round(min_x_no_compton, 2), 0.99, 0.01)
+                sigma_max = 2 * Math.PI / 5
+                $scope.data = [
+                    {
+                        name: "with Compton"
+                        values: xs.map (x) ->
+                            [x, comptonService.sigma_phi(x, beta, v, n)]
+                    },
+                    {
+                        name: "without Compton"
+                        values: full_range.map (x) ->
+                            [x, comptonService.sigma_phi_no_compton(x, v, n, r)]
+                    },
+                    {
+                        name: "Rose threshold"
+                        values: [[0, sigma_max], [1, sigma_max]]
+                    }
+                ]
+                $scope.graph = d3.chart.line()
+                    .x_title "transmission"
+                    .y_title "differential phase noise"
+                $scope.graph
+                    .y_scale()
+                    .domain [0, 3]
+                $scope.minimum_transmission = bisect(
+                    (a) -> comptonService.sigma_phi(a, beta, v, n) < sigma_max,
+                    0.01,
+                    0.99)
+                $scope.minimum_transmission_no_compton = bisect(
+                    (a) -> comptonService.sigma_phi_no_compton(a, v, n, r) < sigma_max,
+                    0.01,
+                    0.99)
+
+            draw_graph(
+                $scope.visibility / 100,
+                $scope.counts,
+                $scope.low_energy_r,
+                $scope.beta,
+                $scope.energy)
+
+            $scope.$watchCollection "[visibility, counts, low_energy_r]", (new_values, old_values) ->
+                draw_graph(
+                    $scope.visibility / 100,
+                    $scope.counts,
+                    $scope.low_energy_r,
+                    $scope.beta,
+                    $scope.energy)
+
+            $scope.$watchCollection "[energy, minimum_transmission, minimum_transmission_no_compton]", (new_values, old_values) ->
+                Table.success (raw_table) ->
+                    $scope.table = thicknessCalculatorService.thickness_table(
+                        raw_table,
+                        $scope.energy,
+                        $scope.minimum_transmission,
+                        $scope.minimum_transmission_no_compton
+                    )
+    ]
