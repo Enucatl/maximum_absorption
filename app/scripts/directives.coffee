@@ -9,47 +9,32 @@ angular.module('app.directives', [
 ])
 
 .directive('appVersion', [
-  'version'
-
-(version) ->
-
-  (scope, elm, attrs) ->
-    elm.text(version)
+    'version'
+    (version) ->
+        (scope, elm, attrs) ->
+            elm.text(version)
 ])
 
-.directive "theoreticalPlot", ($parse) ->
-    {
-    # restricting to an element
-    restrict: "E"
-    replace: false
-    link: (scope, element, attrs) ->
+.directive "theoreticalPlot", [
+    "$parse"
+    "comptonService"
+    ($parse, comptonService) ->
+        {
+        # restricting to an element
+        restrict: "E"
+        replace: false
+        link: (scope, element, attrs) ->
+            width = element[0].clientWidth
+            scope.graph
+                .width width
+                .height 0.618 * width
+            d3.select element[0]
+                .data [scope.data]
+                .call scope.graph
+        }
+    ]
 
-        beta = 0.08
-        gamma = (b) ->
-            (Math.pow(Math.PI, 3) / 3) * (b / (1 - 2 * Math.PI * b))
-        df = (a) ->
-            Math.exp(gamma(beta) * (1 - 1 / a))
-        xs = d3.range(0.01, 0.99, 0.01)
-        data = xs.map (x) -> [x, df(x)]
-        data = [
-            {
-                name: "theory"
-                values: data
-            }
-        ]
-        width = element[0].clientWidth
-        graph = d3.chart.line()
-            .width width
-            .height 0.618 * width
-            .legend_square_size undefined
-            .x_title "transmission"
-            .y_title "dark field"
-        d3.select element[0]
-            .data [data]
-            .call graph
-    }
-
-.directive "noisePlot", ($parse) ->
+.directive "noisePlot", ($parse, comptonService) ->
     {
     # restricting to an element
     restrict: "E"
@@ -59,32 +44,34 @@ angular.module('app.directives', [
         beta = 0.08
         v0 = scope.visibility / 100
         n0 = scope.counts
+        r = 0.5 # measured by Zhentian at low energies
         draw_graph = (v0, n0) ->
-            gamma = (b) ->
-                (Math.pow(Math.PI, 3) / 3) * (b / (1 - 2 * Math.PI * b))
-            df = (a) ->
-                Math.exp(gamma(beta) * (1 - 1 / a))
-            sigma_phi = (a) ->
-                1 / (v0 * Math.sqrt(n0 * a) * df(a))
-            sigma_phi_no_compton = (a) ->
-                1 / (v0 * Math.pow(a, r) * Math.sqrt(n0 * a))
-            xs = d3.range(0.30, 0.99, 0.01)
-            full_range = d3.range(0.01, 0.99, 0.01)
-            data = xs.map (x) -> [x, sigma_phi(x)]
+            max_y = 3
+            min_x = bisect(
+                (a) -> comptonService.sigma_phi(a, v0, n0) < max_y,
+                0.01,
+                0.99)
+            min_x_no_compton = bisect(
+                (a) -> comptonService.sigma_phi_no_compton(a, v0, n0, r) < max_y,
+                0.01,
+                0.99)
+            xs = d3.range(d3.round(min_x, 2), 0.99, 0.01)
+            full_range = d3.range(d3.round(min_x_no_compton, 2), 0.99, 0.01)
             sigma_max = 2 * Math.PI / 5
-            r = 0.5 # measured by Zhentian at low energies
             data = [
                 {
                     name: "with Compton"
-                    values: data
+                    values: xs.map (x) ->
+                        [x, comptonService.sigma_phi(x, v0, n0)]
                 },
                 {
                     name: "without Compton"
-                    values: full_range.map (x) -> [x, sigma_phi_no_compton(x)]
+                    values: full_range.map (x) ->
+                        [x, comptonService.sigma_phi_no_compton(x, v0, n0, r)]
                 },
                 {
                     name: "Rose threshold"
-                    values: full_range.map (x) -> [x, sigma_max]
+                    values: [[0, sigma_max], [1, sigma_max]]
                 }
             ]
             width = element[0].clientWidth
@@ -100,11 +87,11 @@ angular.module('app.directives', [
                 .data [data]
                 .call graph
             scope.minimum_transmission = bisect(
-                (a) -> sigma_phi(a) < sigma_max,
+                (a) -> comptonService.sigma_phi(a, v0, n0) < sigma_max,
                 0.01,
                 0.99)
             scope.minimum_transmission_no_compton = bisect(
-                (a) -> sigma_phi_no_compton(a) < sigma_max,
+                (a) -> comptonService.sigma_phi_no_compton(a, v0, n0, r) < sigma_max,
                 0.01,
                 0.99)
             scope.energy = 100

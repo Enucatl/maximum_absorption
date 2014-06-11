@@ -2,51 +2,58 @@
 
 ### Controllers ###
 
-angular.module('app.controllers', [])
+angular.module('app.controllers',
+    ['app.services'])
 
-.controller('AppCtrl', [
-  '$scope'
-  '$location'
-  '$resource'
-  '$rootScope'
+    .controller('AppCtrl', [
+        '$scope'
+        '$location'
+        '$resource'
+        '$rootScope'
 
-($scope, $location, $resource, $rootScope) ->
+        ($scope, $location, $resource, $rootScope) ->
 
-  # Uses the url to determine if the selected
-  # menu item should have the class active.
-  $scope.$location = $location
-  $scope.$watch('$location.path()', (path) ->
-    $scope.activeNavId = path || '/'
-  )
+            # Uses the url to determine if the selected
+            # menu item should have the class active.
+            $scope.$location = $location
+            $scope.$watch('$location.path()', (path) ->
+                $scope.activeNavId = path || '/'
+            )
 
-  # getClass compares the current url with the id.
-  # If the current url starts with the id it returns 'active'
-  # otherwise it will return '' an empty string. E.g.
-  #
-  #   # current url = '/products/1'
-  #   getClass('/products') # returns 'active'
-  #   getClass('/orders') # returns ''
-  #
-  $scope.getClass = (id) ->
-    if $scope.activeNavId.substring(0, id.length) == id
-      return 'active'
-    else
-      return ''
+            # getClass compares the current url with the id.
+            # If the current url starts with the id it returns 'active'
+            # otherwise it will return '' an empty string. E.g.
+            #
+            #   # current url = '/products/1'
+            #   getClass('/products') # returns 'active'
+            #   getClass('/orders') # returns ''
+            #
+            $scope.getClass = (id) ->
+                if $scope.activeNavId.substring(0, id.length) == id
+                    return 'active'
+                else
+                    return ''
 
-])
+    ])
 
-.controller('MaximumThicknessCtrl', [
-    '$scope'
-    '$http'
+    .controller('TheoreticalPlotCtrl', [
+        '$scope'
+        'comptonService'
 
-    ($scope, $http) ->
-        $scope.energy = 100
-        $scope.visibility = 10
-        $scope.counts = 10000
-        $scope.beta = 0.08
-        $scope.low_energy_r = 0.5
-        $scope.minimum_transmission = 0.4
-        $scope.minimum_transmission_no_compton = 0.1
+        ($scope, comptonService) ->
+            beta = 0.08
+            xs = d3.range(0.01, 0.99, 0.01)
+            data = xs.map (x) -> [x, comptonService.df(x, beta)]
+            $scope.data = [
+                {
+                    name: "theory"
+                    values: data
+                }
+            ]
+            $scope.graph = d3.chart.line()
+                .legend_square_size undefined
+                .x_title "transmission"
+                .y_title "dark field"
 
         $scope.update_table = (min_tr, min_tr_no_compton) ->
             $http.get "nist.data.json"
