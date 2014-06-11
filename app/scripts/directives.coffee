@@ -51,3 +51,11 @@ angular.module('app.directives', [
                 .data [scope.data]
                 .call scope.graph
     }
+
+.directive "mathjaxBind", ->
+    {
+        restrict: "E"
+        link: (scope, element, attrs) ->
+            MathJax.Hub.Queue ["Typeset", MathJax.Hub]
+
+    }
