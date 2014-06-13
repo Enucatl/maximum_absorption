@@ -20,7 +20,12 @@ div(ng-app='ng-app')
 
     p.
       With the current parameters, the minimum transmission required to stay
-      under the maximum noise level is {{minimum_transmission | number:2}}.
+      under the maximum noise level with the Compton model is {{minimum_transmission | number:2}}.
+    p.
+      A value of 2 for the log ratio is typical of the high-energy
+      experiment, while a value of about 0.5 has been measured on a lower
+      energy setup by Zhentian.
+
     .span6
       p Energy (keV):
       p.bottom-padded
@@ -39,9 +44,11 @@ div(ng-app='ng-app')
       table#hor-minimalist-a.span6
         tr
           th Material
-          th Max thickness (cm)
-          th Max thickness (cm) <br> without Compton
+          th Max thickness (cm) <br> Compton model
+          th Max thickness (cm) <br> r = 0.5
+          th Max thickness (cm) <br> r = 2.0
         tr(ng-repeat="row in table")
           td(align="center") {{ row.name }}
           td(align="center") {{ row.t | number:2 }}
-          td(align="center") {{ row.t_no_compton | number:2 }}
+          td(align="center") {{ row.t_05 | number:2 }}
+          td(align="center") {{ row.t_20 | number:2 }}

@@ -89,14 +89,19 @@ angular.module('app.controllers',
                 sigma_max = 2 * Math.PI / 5
                 $scope.data = [
                     {
-                        name: "with Compton"
+                        name: "Compton model"
                         values: xs.map (x) ->
                             [x, comptonService.sigma_phi(x, beta, v, n)]
                     },
                     {
-                        name: "without Compton"
+                        name: "Constant log ratio = 0.5"
                         values: full_range.map (x) ->
                             [x, comptonService.sigma_phi_no_compton(x, v, n, r)]
+                    },
+                    {
+                        name: "Constant log ratio = 2.0"
+                        values: full_range.map (x) ->
+                            [x, comptonService.sigma_phi_no_compton(x, v, n, 2)]
                     },
                     {
                         name: "Rose threshold"
@@ -113,8 +118,12 @@ angular.module('app.controllers',
                     (a) -> comptonService.sigma_phi(a, beta, v, n) < sigma_max,
                     0.01,
                     0.99)
-                $scope.minimum_transmission_no_compton = bisect(
+                $scope.minimum_transmission_05 = bisect(
                     (a) -> comptonService.sigma_phi_no_compton(a, v, n, r) < sigma_max,
+                    0.01,
+                    0.99)
+                $scope.minimum_transmission_20 = bisect(
+                    (a) -> comptonService.sigma_phi_no_compton(a, v, n, 2) < sigma_max,
                     0.01,
                     0.99)
 
@@ -133,12 +142,13 @@ angular.module('app.controllers',
                     $scope.beta,
                     $scope.energy)
 
-            $scope.$watchCollection "[energy, minimum_transmission, minimum_transmission_no_compton]", (new_values, old_values) ->
+            $scope.$watchCollection "[energy, minimum_transmission, minimum_transmission_05, minimum_transmission_20]", (new_values, old_values) ->
                 Table.success (raw_table) ->
                     $scope.table = thicknessCalculatorService.thickness_table(
                         raw_table,
                         $scope.energy,
                         $scope.minimum_transmission,
-                        $scope.minimum_transmission_no_compton
+                        $scope.minimum_transmission_05,
+                        $scope.minimum_transmission_20
                     )
     ]

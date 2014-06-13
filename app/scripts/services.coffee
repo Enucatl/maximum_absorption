@@ -31,7 +31,7 @@ angular
     ]
 
     .service 'thicknessCalculatorService', ->
-        this.thickness_table = (raw_table, energy, min_tr, min_tr_no_compton) ->
+        this.thickness_table = (raw_table, energy, min_tr, min_tr_05, min_tr_20) ->
             table = raw_table.map (element) ->
                 array = element.table.split(/\s+/).map(parseFloat)
                 rows = []
@@ -49,6 +49,7 @@ angular
                 {
                     name: d.name
                     t: -Math.log(min_tr) / d.mu
-                    t_no_compton: -Math.log(min_tr_no_compton) / d.mu
+                    t_05: -Math.log(min_tr_05) / d.mu
+                    t_20: -Math.log(min_tr_20) / d.mu
                 }
         return this
